@@ -7,8 +7,7 @@ import pyautogui
 from matplotlib import pyplot as plt
 from matplotlib.patches import Rectangle
 
-from AlbionOnlineBotProofOfConcept.models.AbstractObject import AObject
-from AlbionOnlineBotProofOfConcept.models.plot import Plot
+from models.AbstractObject import AObject
 
 
 def filter_duplicates(coords_list, threshold):
@@ -22,18 +21,23 @@ def filter_duplicates(coords_list, threshold):
                 filtered_eventable_list.append(coords)
     return filtered_eventable_list
 
-def analyze_screen(eventables):
+def analyze_screen(eventables_categories):
     founds = {}
     # Recherchez l'image sur l'écran.
-    for eventable in eventables:
-        print('analyze_screen cherche : ' + eventable.name)
-        # Recherchez l'image sur l'écran.
-        image_locations = list(pyautogui.locateAllOnScreen(eventable.image, confidence=0.8))
+    for eventables_category in eventables_categories.keys():
 
-        # Prendre une capture d'écran de l'écran entier
-        screenshot = pyautogui.screenshot()
-        # Convertir la capture d'écran en une image OpenCV
-        screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
+        #print('analyze_screen cherche : ' + eventables_category)
+        image_locations = []
+        for eventable in eventables_categories[eventables_category]:
+            # Recherchez l'image sur l'écran.
+            before = len(image_locations);
+            image_locations.extend(list(pyautogui.locateAllOnScreen(eventable.image, confidence=0.7)))
+            if before < len(image_locations) :
+                print("Trouvé : " + eventable.path)
+            # Prendre une capture d'écran de l'écran entier
+            screenshot = pyautogui.screenshot()
+            # Convertir la capture d'écran en une image OpenCV
+            screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
 
         if (len(image_locations)) > 0:
             plt.rcParams['image.interpolation'] = 'nearest'
@@ -46,32 +50,19 @@ def analyze_screen(eventables):
                     # Prend les coordonées.
                     left, top, width, height = image_location
 
-                    if eventable.name == "plot_recoltable":
 
-                        plot = Plot(left + width / 2, top + height / 2 + 100, 1)
-                        founds.setdefault('plot_recoltable', []).append(plot)
-                        # ajout du marker sur le plot
-                        plt.scatter(plot.x, plot.y, s=200, c=np.random.randint(0, 50), marker='X', cmap='summer')
-                    if eventable.name == "plot_confirm_recolt":
-                        confirm = AObject(left + width / 2, top + height / 2)
-                        founds.setdefault('plot_confirm_recolt', []).append(confirm)
-                        # ajout du marker sur le bouton
-                        plt.scatter(confirm.x, confirm.y, s=200, c=np.random.randint(0, 50), marker='X', cmap='summer')
-                    if eventable.name == "map_player":
-                        player = AObject(left + width / 2, top + height / 2)
-                        founds.setdefault('map_player', []).append(player)
-                        # ajout du marker sur le bouton
-                        plt.scatter(player.x, player.y, s=200, c=np.random.randint(0, 50), marker='X', cmap='summer')
+                    result = AObject(left + width / 2, top + height / 2)
+                    founds.setdefault(eventable.name, []).append(result)
+                    # ajout du marker sur le plot
+                    plt.scatter(result.x, result.y, s=200, c=np.random.randint(0, 50), marker='X', cmap='summer')
 
                     # ajout du rectangle autour de l'image trouvée
                     plt.gca().add_patch(Rectangle((left, top), width, height, edgecolor='green',
                                                   facecolor='none',
                                                   lw=2))
 
-            # activer la correction gamma dans Matplotlib
-
             plt.show()
-        return founds
+    return founds
 def mount():
     keyboard.press_and_release('q')
     time.sleep(4)

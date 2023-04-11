@@ -6,8 +6,8 @@ import pyautogui
 from matplotlib import pyplot as plt
 from matplotlib.patches import Rectangle
 
-from AlbionOnlineBotProofOfConcept import helper
-from AlbionOnlineBotProofOfConcept.models.eventable import Eventable
+import helper
+from models.eventable import Eventable
 
 
 class Plot():
