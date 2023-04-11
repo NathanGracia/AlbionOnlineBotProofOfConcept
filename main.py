@@ -41,6 +41,7 @@ def look_for_collectable_plots():
         plots.pop(0)
 
 
+def mooveToAlpha():
 
 def main():
 
