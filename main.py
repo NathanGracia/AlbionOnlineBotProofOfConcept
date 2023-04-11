@@ -19,26 +19,40 @@ sys.path.insert(0, "/models")
 pp = pprint.PrettyPrinter(indent=4)
 
 def look_for_collectable_plots():
+    eventables_categories = {}
     eventables = [
         Eventable('plot_recoltable',
-                  "C:/Users/DeusKiwi/PycharmProjects/albionBot/AlbionOnlineBotProofOfConcept/ressources/plot_recoltable.PNG"),
+                  "ressources/plot_recoltable_1920_2.PNG"),
         Eventable('plot_recoltable',
-                  "C:/Users/DeusKiwi/PycharmProjects/albionBot/AlbionOnlineBotProofOfConcept/ressources/plot_recoltable.PNG"),
+                  "ressources/plot_recoltable_1920_1.PNG"),
         Eventable('plot_recoltable',
-                  "C:/Users/DeusKiwi/PycharmProjects/albionBot/AlbionOnlineBotProofOfConcept/ressources/plot_recoltable.PNG"),
+                  "ressources/plot_recoltable_1920_4.PNG"),
+        Eventable('plot_recoltable',
+                  "ressources/plot_recoltable_1920_6.PNG"),
+        Eventable('plot_recoltable',
+                  "ressources/plot_recoltable_1920_7.PNG"),
+        Eventable('plot_recoltable',
+                  "ressources/plot_recoltable_1920_8.PNG"),
+        Eventable('plot_recoltable',
+                  "ressources/plot_recoltable_1920_9.PNG"),
+
     ]
     plots = []
     while True:
-        while len(plots) < 1:
+        while True:
             for eventable in eventables:
                 eventable.image = cv2.imread(eventable.path)
+                #todo trouver comment ajouter mes eventables dans la liste au fur et à mesure.
+                eventables_categories.setdefault(eventable.name, set()).add(eventable)
 
-                founds = helper.analyze_screen(eventables)
+            founds = helper.analyze_screen(eventables_categories)
 
-                plots.extend(founds.get('plot_recoltable', []))
+            for AObject in founds.get('plot_recoltable', []):
+                plot = Plot(AObject.x, AObject.y, 1)
+                plots.append(plot)
 
-        plots[0].collect()
-        plots.pop(0)
+
+    return plots
 
 
 
