@@ -26,18 +26,20 @@ def analyze_screen(eventables_categories):
     # Recherchez l'image sur l'écran.
     for eventables_category in eventables_categories.keys():
 
-        #print('analyze_screen cherche : ' + eventables_category)
+        print('analyze_screen cherche : ' + eventables_category)
         image_locations = []
         for eventable in eventables_categories[eventables_category]:
             # Recherchez l'image sur l'écran.
             before = len(image_locations);
-            image_locations.extend(list(pyautogui.locateAllOnScreen(eventable.image, confidence=0.7)))
+            image_locations.extend(list(pyautogui.locateAllOnScreen(eventable.image, confidence=0.9, grayscale=True)))
             if before < len(image_locations) :
                 print("Trouvé : " + eventable.path)
             # Prendre une capture d'écran de l'écran entier
             screenshot = pyautogui.screenshot()
             # Convertir la capture d'écran en une image OpenCV
             screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
+            # Convertir l'image de l'écran en niveaux de gris
+            screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
 
         if (len(image_locations)) > 0:
             plt.rcParams['image.interpolation'] = 'nearest'
@@ -54,7 +56,7 @@ def analyze_screen(eventables_categories):
                     result = AObject(left + width / 2, top + height / 2)
                     founds.setdefault(eventable.name, []).append(result)
                     # ajout du marker sur le plot
-                    plt.scatter(result.x, result.y, s=200, c=np.random.randint(0, 50), marker='X', cmap='summer')
+                    #plt.scatter(result.x, result.y, s=200, c=np.random.randint(0, 50), marker='X', cmap='summer')
 
                     # ajout du rectangle autour de l'image trouvée
                     plt.gca().add_patch(Rectangle((left, top), width, height, edgecolor='green',

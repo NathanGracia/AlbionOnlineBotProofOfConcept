@@ -23,6 +23,7 @@ class Plot():
         pass
 
     def confirm(self, keyboard=None):
+        eventables_categories = {}
         eventables = [
             Eventable('plot_confirm_recolt',
                       "C:/Users/DeusKiwi/PycharmProjects/albionBot/AlbionOnlineBotProofOfConcept/ressources/confirm.PNG"),
@@ -34,8 +35,8 @@ class Plot():
         while len(confirms) < 1 and time.time() - start_time < timeout:
             for eventable in eventables:
                 eventable.image = cv2.imread(eventable.path)
-
-                founds = helper.analyze_screen(eventables)
+                eventables_categories.setdefault(eventable.name, set()).add(eventable)
+                founds = helper.analyze_screen(eventables_categories)
 
                 confirms = founds.get('plot_confirm_recolt', [])
         if len(confirms) < 1:

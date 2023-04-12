@@ -20,46 +20,64 @@ pp = pprint.PrettyPrinter(indent=4)
 
 def look_for_collectable_plots():
     eventables_categories = {}
+    # eventables = [
+    #     Eventable('plot_recoltable',
+    #               "ressources/plot_recoltable_1920_2.PNG"),
+    #     Eventable('plot_recoltable',
+    #               "ressources/plot_recoltable_1920_1.PNG"),
+    #     Eventable('plot_recoltable',
+    #               "ressources/plot_recoltable_1920_4.PNG"),
+    #     Eventable('plot_recoltable',
+    #               "ressources/plot_recoltable_1920_6.PNG"),
+    #     Eventable('plot_recoltable',
+    #               "ressources/plot_recoltable_1920_7.PNG"),
+    #     Eventable('plot_recoltable',
+    #               "ressources/plot_recoltable_1920_8.PNG"),
+    #     Eventable('plot_recoltable',
+    #               "ressources/plot_recoltable_1920_9.PNG"),
+    #
+    # ]
     eventables = [
         Eventable('plot_recoltable',
-                  "ressources/plot_recoltable_1920_2.PNG"),
+                  "C:/Users/DeusKiwi/PycharmProjects/albionBot/AlbionOnlineBotProofOfConcept/ressources/plot_recoltable_2560_4.png"),
         Eventable('plot_recoltable',
-                  "ressources/plot_recoltable_1920_1.PNG"),
+                  "C:/Users/DeusKiwi/PycharmProjects/albionBot/AlbionOnlineBotProofOfConcept/ressources/plot_recoltable_2560_5.png"),
         Eventable('plot_recoltable',
-                  "ressources/plot_recoltable_1920_4.PNG"),
+                  "C:/Users/DeusKiwi/PycharmProjects/albionBot/AlbionOnlineBotProofOfConcept/ressources/plot_recoltable_2560_6.png"),
         Eventable('plot_recoltable',
-                  "ressources/plot_recoltable_1920_6.PNG"),
+                  "C:/Users/DeusKiwi/PycharmProjects/albionBot/AlbionOnlineBotProofOfConcept/ressources/plot_recoltable_2560_7.png"),
         Eventable('plot_recoltable',
-                  "ressources/plot_recoltable_1920_7.PNG"),
+                  "C:/Users/DeusKiwi/PycharmProjects/albionBot/AlbionOnlineBotProofOfConcept/ressources/plot_recoltable_2560_8.png"),
         Eventable('plot_recoltable',
-                  "ressources/plot_recoltable_1920_8.PNG"),
-        Eventable('plot_recoltable',
-                  "ressources/plot_recoltable_1920_9.PNG"),
+                  "C:/Users/DeusKiwi/PycharmProjects/albionBot/AlbionOnlineBotProofOfConcept/ressources/plot_recoltable_2560_9.png"),
+
 
     ]
     plots = []
-    while True:
-        while True:
-            for eventable in eventables:
-                eventable.image = cv2.imread(eventable.path)
-                #todo trouver comment ajouter mes eventables dans la liste au fur et à mesure.
-                eventables_categories.setdefault(eventable.name, set()).add(eventable)
+    #todo : stopper la boucle si plots.len > 1, et envoyer le plot[0].collect()
+    while len(plots) < 1:
+        for eventable in eventables:
+            eventable.image = cv2.imread(eventable.path)
+            #todo trouver comment ajouter mes eventables dans la liste au fur et à mesure.
+            eventables_categories.setdefault(eventable.name, set()).add(eventable)
 
-            founds = helper.analyze_screen(eventables_categories)
+        founds = helper.analyze_screen(eventables_categories)
 
-            for AObject in founds.get('plot_recoltable', []):
-                plot = Plot(AObject.x, AObject.y, 1)
-                plots.append(plot)
-
-
-    return plots
+        for AObject in founds.get('plot_recoltable', []):
+            plot = Plot(AObject.x , AObject.y + 150, 1)
+            plots.append(plot)
 
 
-def mooveToAlpha():
+    plots[0].collect()
+
+
+
 
 def main():
 
-    look_for_collectable_plots()
+        while True :
+
+            look_for_collectable_plots()
 
 if __name__ == '__main__':
     main()
